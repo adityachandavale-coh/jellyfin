@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Local runtime state — never commit a library index or user database
+*.db
+*.db-wal
+*.db-shm
+config.ini
+!packaging/config.example.ini
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

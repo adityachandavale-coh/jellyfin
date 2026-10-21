@@ -1,0 +1,58 @@
+[Unit]
+Description=Lumen media streaming server
+Documentation=https://github.com/adityachandavale-coh/jellyfin
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=lumen
+Group=lumen
+WorkingDirectory=/opt/lumen
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 -m lumen --config /etc/lumen/config.ini
+
+Restart=on-failure
+RestartSec=5s
+
+# Give ffmpeg room to finish writing the current fragment on shutdown.
+KillMode=mixed
+TimeoutStopSec=20
+
+# --- hardening -------------------------------------------------------
+# Lumen only ever reads media and writes to its own state and cache dirs.
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=yes
+MemoryDenyWriteExecute=no
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+# The only writable paths.
+StateDirectory=lumen
+CacheDirectory=lumen
+ReadWritePaths=/var/lib/lumen /var/cache/lumen
+
+# ProtectSystem=strict makes everything else read-only, which is exactly what
+# we want for the media itself. If your media lives under /home, add it here
+# and set ProtectHome=read-only above.
+ReadOnlyPaths=/srv/media
+
+[Install]
+WantedBy=multi-user.target

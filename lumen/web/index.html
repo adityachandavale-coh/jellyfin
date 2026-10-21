@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161a">
+<title>Lumen</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div id="boot" class="centre">
+  <p class="muted">Loading…</p>
+</div>
+
+<!-- First run: create the admin account -->
+<section id="setup" class="centre hidden">
+  <form class="card auth" id="setup-form" autocomplete="off">
+    <h1>Welcome to Lumen</h1>
+    <p class="muted">Create the first account. This one is an administrator.</p>
+    <label for="setup-user">Username</label>
+    <input id="setup-user" name="username" required autocomplete="username">
+    <label for="setup-pass">Password</label>
+    <input id="setup-pass" name="password" type="password" required
+           minlength="8" autocomplete="new-password">
+    <p class="hint">At least 8 characters.</p>
+    <p class="error hidden" id="setup-error" role="alert"></p>
+    <button type="submit">Create account</button>
+  </form>
+</section>
+
+<!-- Login -->
+<section id="login" class="centre hidden">
+  <form class="card auth" id="login-form">
+    <h1>Lumen</h1>
+    <label for="login-user">Username</label>
+    <input id="login-user" name="username" required autocomplete="username">
+    <label for="login-pass">Password</label>
+    <input id="login-pass" name="password" type="password" required
+           autocomplete="current-password">
+    <p class="error hidden" id="login-error" role="alert"></p>
+    <button type="submit">Sign in</button>
+  </form>
+</section>
+
+<!-- The library -->
+<section id="app" class="hidden">
+  <header class="topbar">
+    <a class="brand" href="#/" aria-label="Lumen home">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"
+              fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M10 8.8v6.4l5.2-3.2z" fill="currentColor"/>
+      </svg>
+      <span>Lumen</span>
+    </a>
+    <input id="search" type="search" placeholder="Search library…" aria-label="Search library">
+    <nav class="filters" role="group" aria-label="Filter by type">
+      <button data-kind="" class="chip active">All</button>
+      <button data-kind="movie" class="chip">Movies</button>
+      <button data-kind="episode" class="chip">Shows</button>
+    </nav>
+    <div class="spacer"></div>
+    <button id="rescan" class="ghost" title="Rescan the library">Rescan</button>
+    <button id="logout" class="ghost">Sign out</button>
+  </header>
+
+  <main>
+    <div id="notice" class="notice hidden" role="status"></div>
+
+    <section id="continue-section" class="hidden">
+      <h2>Continue watching</h2>
+      <div id="continue" class="grid"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2 id="library-heading">Library</h2>
+        <label class="sort">
+          Sort
+          <select id="sort">
+            <option value="title">Title</option>
+            <option value="added">Recently added</option>
+            <option value="year">Year</option>
+            <option value="size">Size</option>
+          </select>
+        </label>
+      </div>
+      <div id="library" class="grid"></div>
+      <p id="empty" class="muted hidden"></p>
+      <button id="more" class="ghost wide hidden">Load more</button>
+    </section>
+  </main>
+</section>
+
+<!-- Player -->
+<section id="player" class="hidden">
+  <div class="player-bar">
+    <button id="player-close" class="ghost">← Back</button>
+    <span id="player-title"></span>
+    <div class="spacer"></div>
+    <span id="player-mode" class="badge"></span>
+  </div>
+  <div class="stage">
+    <video id="video" playsinline controls preload="metadata"></video>
+  </div>
+  <!-- Shown only for transcoded playback. A progressive stream reports an
+       empty seekable range, so the browser's own timeline cannot scrub it and
+       shows the current segment's time rather than the real position. These
+       controls replace it. -->
+  <div id="controls" class="controls hidden">
+    <button id="play-toggle" class="icon" aria-label="Play">Play</button>
+    <span id="seek-now" class="time">0:00</span>
+    <input id="seek" type="range" min="0" max="100" step="1" value="0"
+           aria-label="Seek">
+    <span id="seek-total" class="time">0:00</span>
+    <label class="vol">
+      <span class="sr-only">Volume</span>
+      <input id="volume" type="range" min="0" max="1" step="0.05" value="1"
+             aria-label="Volume">
+    </label>
+    <button id="fullscreen" class="icon" aria-label="Full screen">Full screen</button>
+  </div>
+  <p id="player-note" class="muted small"></p>
+  <p id="player-error" class="error hidden" role="alert"></p>
+</section>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
